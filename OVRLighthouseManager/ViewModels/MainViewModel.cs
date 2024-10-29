@@ -9,7 +9,9 @@ using Microsoft.UI.Xaml.Controls;
 using OVRLighthouseManager.Contracts.Services;
 using OVRLighthouseManager.Helpers;
 using OVRLighthouseManager.Models;
+using OVRLighthouseManager.Services;
 using Serilog;
+using Windows.UI.Popups;
 
 namespace OVRLighthouseManager.ViewModels;
 
@@ -42,6 +44,8 @@ public partial class MainViewModel : ObservableRecipient
 
     public bool IsScanning => _lighthouseService.IsDiscovering;
     public readonly ICommand ScanCommand;
+    public readonly ICommand TurnOnCommand;
+    public readonly ICommand TurnOffCommand;
 
     public MainViewModel(
         ILighthouseDiscoveryService lighthouseService,
@@ -107,6 +111,7 @@ public partial class MainViewModel : ObservableRecipient
         }).ToArray();
         Devices = new(devices);
 
+
         ScanCommand = scanCommand;
         ScanCommand.CanExecuteChanged += (sender, args) =>
         {
@@ -115,6 +120,18 @@ public partial class MainViewModel : ObservableRecipient
                 OnPropertyChanged(nameof(IsScanning));
             });
         };
+        TurnOnCommand = new RelayCommand(TurnOn);
+        TurnOffCommand = new RelayCommand(TurnOff);
+    }
+
+    private void TurnOn()
+    {
+        Intrusion.TurnOn = true;
+    }
+
+    private void TurnOff()
+    {
+        Intrusion.TurnOff = true;
     }
 
     public async void OnTogglePowerManagement(object sender, RoutedEventArgs e)

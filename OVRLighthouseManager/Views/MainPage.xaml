@@ -48,7 +48,7 @@
         <StackPanel Grid.Row="1" Grid.Column="0"
                     Margin="{StaticResource MediumBottomMargin}"
                     >
-            <ToggleSwitch
+            <!--<ToggleSwitch
                 IsOn="{x:Bind ViewModel.PowerManagement, Mode=OneWay}"
                 Toggled="{x:Bind ViewModel.OnTogglePowerManagement}"
                 >
@@ -59,7 +59,7 @@
             <TextBlock x:Uid="Shell_Main_PowerManagementDescription"
                        TextWrapping="WrapWholeWords"
                        Style="{StaticResource CaptionTextBlockStyle}"
-                       />
+                       />-->
             <RadioButtons
                 SelectedIndex="{x:Bind ViewModel.PowerDownModeIndex}"
                 SelectionChanged="{x:Bind ViewModel.OnSelectPowerDownMode}"
@@ -69,6 +69,22 @@
             </RadioButtons>
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal" Spacing="{StaticResource SmallSpacing}">
+            <!-- ON ボタン -->
+            <Button x:Name="OnButton"
+                Content="ON"
+                Command="{x:Bind ViewModel.TurnOnCommand}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"/>
+
+            <!-- OFF ボタン -->
+            <Button x:Name="OffButton"
+                Content="OFF"
+                Command="{x:Bind ViewModel.TurnOffCommand}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"/>
+        </StackPanel>
+        
         <StackPanel
             Grid.Row="2" Grid.Column="0"
             Spacing="{StaticResource XSmallSpacing}"

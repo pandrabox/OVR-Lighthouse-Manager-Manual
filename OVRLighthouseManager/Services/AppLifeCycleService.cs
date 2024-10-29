@@ -29,9 +29,57 @@ class AppLifeCycleService : IAppLifecycleService
         _scanCommand = scanCommand;
     }
 
+    //public async Task OnLaunch()
+    //{
+    //    _openVRService.OnVRMonitorConnected += async (_, __) =>
+    //    {
+    //        try
+    //        {
+    //            await OnVRMonitorConnected();
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Log.Error(e, "OnVRMonitorConnected Failed");
+    //        }
+    //    };
+    //    _openVRService.OnVRSystemQuit += async (_, __) =>
+    //    {
+    //        try
+    //        {
+    //            await OnVRSystemQuit();
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Log.Error(e, "OnVRSystemQuit Failed");
+    //        }
+    //    };
+    //    if (_openVRService.IsVRMonitorConnected)
+    //    {
+    //        try
+    //        {
+    //            await OnVRMonitorConnected();
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Log.Error(e, "OnVRMonitorConnected Failed");
+    //        }
+    //    }
+    //}
+
     public async Task OnLaunch()
     {
-        _openVRService.OnVRMonitorConnected += async (_, __) =>
+        // 初回起動時に接続
+        try
+        {
+            await OnVRMonitorConnected();
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "OnVRMonitorConnected Failed");
+        }
+
+        // ONボタン
+        Intrusion.OnTurnOn += async () =>
         {
             try
             {
@@ -42,7 +90,9 @@ class AppLifeCycleService : IAppLifecycleService
                 Log.Error(e, "OnVRMonitorConnected Failed");
             }
         };
-        _openVRService.OnVRSystemQuit += async (_, __) =>
+
+        // OFFボタン
+        Intrusion.OnTurnOff += async () =>
         {
             try
             {
@@ -53,17 +103,6 @@ class AppLifeCycleService : IAppLifecycleService
                 Log.Error(e, "OnVRSystemQuit Failed");
             }
         };
-        if (_openVRService.IsVRMonitorConnected)
-        {
-            try
-            {
-                await OnVRMonitorConnected();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "OnVRMonitorConnected Failed");
-            }
-        }
     }
 
     public async Task OnBeforeAppExit()
@@ -75,10 +114,10 @@ class AppLifeCycleService : IAppLifecycleService
     private async Task OnVRMonitorConnected()
     {
         Log.Information("OnVRMonitorConnected");
-        if (!_lighthouseSettingsService.PowerManagement)
-        {
-            return;
-        }
+        //if (!_lighthouseSettingsService.PowerManagement)
+        //{
+        //    return;
+        //}
 
         if (_scanCommand.CanExecute(null))
         {
@@ -108,10 +147,10 @@ class AppLifeCycleService : IAppLifecycleService
     private async Task OnVRSystemQuit()
     {
         Log.Information("OnVRSystemQuit");
-        if (!_lighthouseSettingsService.PowerManagement)
-        {
-            return;
-        }
+        //if (!_lighthouseSettingsService.PowerManagement)
+        //{
+        //    return;
+        //}
 
         if (_scanCommand.CanExecute(null))
         {
@@ -157,10 +196,10 @@ class AppLifeCycleService : IAppLifecycleService
 
         await _scanCommand.StopScan();
 
-        dispatcherQueue.TryEnqueue(() =>
-        {
-            App.Current.Exit();
-        });
+        //dispatcherQueue.TryEnqueue(() =>
+        //{
+        //    App.Current.Exit();
+        //});
 
         Log.Information("OnVRSystemQuit Done");
     }
